@@ -1,14 +1,98 @@
 <%- include('partials/header') %>
-<main>
-    <h1><%= title %></h1>
-    <h2>Upcoming Service Projects</h2>
-    <ul>
-        <li>Park Cleanup - Join us to clean up local parks and make them beautiful!</li>
-        <li>Food Drive - Help collect and distribute food to those in need.</li>
-        <li>Community Tutoring - Volunteer to tutor students in various subjects.</li>
-    </ul>
-    <!-- Put your page-specific content here -->
+
+<main class="page">
+
+    <header class="page-header">
+        <p class="eyebrow">Get involved</p>
+        <h1><%= title %></h1>
+        <p class="lead">Browse upcoming opportunities to serve. Each project is hosted by one of our partner organizations and open to volunteers of all experience levels.</p>
+    </header>
+
+    <!-- Upcoming projects -->
+    <section class="home-section" aria-labelledby="upcoming-heading">
+        <h2 id="upcoming-heading">Upcoming service projects</h2>
+        <div class="project-list">
+
+            <article class="project-card">
+                <div class="project-host">
+                    <img src="/images/greenharvest-logo.png" alt="GreenHarvest Growers logo">
+                    <span>Hosted by GreenHarvest Growers</span>
+                </div>
+                <h3>Park Cleanup</h3>
+                <p class="tag-row"><span class="tag">Environmental</span></p>
+                <p>Join us to clean up local parks and make them beautiful. We will collect litter, clear trails, and mulch garden beds. Gloves, bags, and tools are provided.</p>
+                <dl class="detail-list">
+                    <div><dt>When</dt><dd>Saturday, November 14, 2026 · 9:00 AM to 12:00 PM</dd></div>
+                    <div><dt>Where</dt><dd>Riverside Community Park, main pavilion</dd></div>
+                    <div><dt>Volunteers needed</dt><dd>25</dd></div>
+                </dl>
+                <a class="btn btn-primary" href="mailto:contact@greenharvest.org?subject=Park%20Cleanup%20volunteer">Sign Up</a>
+            </article>
+
+            <article class="project-card">
+                <div class="project-host">
+                    <img src="/images/unityserve-logo.png" alt="UnityServe Volunteers logo">
+                    <span>Hosted by UnityServe Volunteers</span>
+                </div>
+                <h3>Food Drive</h3>
+                <p class="tag-row"><span class="tag">Community Service</span></p>
+                <p>Help collect and distribute food to those in need. Volunteers will sort donations, pack family boxes, and staff the pickup line at the community center.</p>
+                <dl class="detail-list">
+                    <div><dt>When</dt><dd>Saturday, November 21, 2026 · 10:00 AM to 2:00 PM</dd></div>
+                    <div><dt>Where</dt><dd>Westside Community Center</dd></div>
+                    <div><dt>Volunteers needed</dt><dd>40</dd></div>
+                </dl>
+                <a class="btn btn-primary" href="mailto:hello@unityserve.org?subject=Food%20Drive%20volunteer">Sign Up</a>
+            </article>
+
+            <article class="project-card">
+                <div class="project-host">
+                    <img src="/images/brightfuture-logo.png" alt="BrightFuture Builders logo">
+                    <span>Hosted by BrightFuture Builders</span>
+                </div>
+                <h3>Community Tutoring</h3>
+                <p class="tag-row"><span class="tag">Educational</span></p>
+                <p>Volunteer to tutor students in various subjects. Sessions pair one tutor with one or two students in reading, math, and science for grades 3 through 8.</p>
+                <dl class="detail-list">
+                    <div><dt>When</dt><dd>Every Tuesday starting December 1, 2026 · 4:00 PM to 6:00 PM</dd></div>
+                    <div><dt>Where</dt><dd>Lincoln Branch Library, study rooms</dd></div>
+                    <div><dt>Volunteers needed</dt><dd>15</dd></div>
+                </dl>
+                <a class="btn btn-primary" href="mailto:info@brightfuture.org?subject=Community%20Tutoring%20volunteer">Sign Up</a>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- What to expect -->
+    <section class="home-section" aria-labelledby="expect-heading">
+        <h2 id="expect-heading">What to expect</h2>
+        <div class="feature-grid">
+            <article class="feature-card">
+                <span class="feature-step" aria-hidden="true">1</span>
+                <h3>Sign up</h3>
+                <p>Choose a project and send a quick note to the host organization. They will confirm your spot and share any details.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-step" aria-hidden="true">2</span>
+                <h3>Show up</h3>
+                <p>Arrive a few minutes early, check in with the project leader, and get a short orientation before work begins.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-step" aria-hidden="true">3</span>
+                <h3>Serve together</h3>
+                <p>Work alongside neighbors and partner staff. Most projects wrap up with a brief debrief so you can see the results.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- Call to action -->
+    <section class="cta-banner" aria-labelledby="cta-heading">
+        <h2 id="cta-heading">Looking for something specific?</h2>
+        <p>Projects are grouped into four categories so you can find the kind of service that fits you best.</p>
+        <a class="btn btn-light" href="/categories">Browse by Category</a>
+    </section>
+
 </main>
+
 <%- include('partials/footer') %>
-
-

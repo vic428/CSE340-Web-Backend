@@ -1,15 +1,88 @@
 <%- include('partials/header') %>
 
-<main>
-    <h1><%= title %></h1>
-    <p>Here are a few of our partner organizations:</p>
-    <ul>
-        <li><img src="/images/brightfuture-logo.png" alt="BrightFuture Builders logo"><strong>BrightFuture Builders</strong>: info@brightfuture.org</li>
-        <li><img src="/images/greenharvest-logo.png" alt="GreenHarvest Growers logo"><strong>GreenHarvest Growers</strong>: contact@greenharvest.org</li>
-        <li><img src="/images/unityserve-logo.png" alt="UnityServe Volunteers logo"><strong>UnityServe Volunteers</strong>: hello@unityserve.org</li>
-    </ul>
+<main class="page">
 
-    
+    <header class="page-header">
+        <p class="eyebrow">Who we work with</p>
+        <h1><%= title %></h1>
+        <p class="lead">Every project on the CSE 340 Service Network is hosted by a trusted local organization. Get to know the partners who make service possible.</p>
+    </header>
+
+    <!-- Partner profiles -->
+    <section class="home-section" aria-labelledby="partners-heading">
+        <h2 id="partners-heading">Partner profiles</h2>
+        <div class="profile-list">
+
+            <article class="profile-card">
+                <img src="/images/brightfuture-logo.png" alt="BrightFuture Builders logo">
+                <div class="profile-body">
+                    <h3>BrightFuture Builders</h3>
+                    <p class="tag-row"><span class="tag">Community Service</span><span class="tag">Educational</span></p>
+                    <p>BrightFuture Builders repairs homes, builds playgrounds, and renovates community centers so families have safe places to live, learn, and gather.</p>
+                    <dl class="detail-list">
+                        <div><dt>Focus</dt><dd>Housing and community spaces</dd></div>
+                        <div><dt>Founded</dt><dd>2012</dd></div>
+                        <div><dt>Contact</dt><dd><a href="mailto:info@brightfuture.org">info@brightfuture.org</a></dd></div>
+                    </dl>
+                </div>
+            </article>
+
+            <article class="profile-card">
+                <img src="/images/greenharvest-logo.png" alt="GreenHarvest Growers logo">
+                <div class="profile-body">
+                    <h3>GreenHarvest Growers</h3>
+                    <p class="tag-row"><span class="tag">Environmental</span><span class="tag">Health and Wellness</span></p>
+                    <p>GreenHarvest Growers plants community gardens, teaches sustainable growing, and delivers fresh produce to neighbors facing food insecurity.</p>
+                    <dl class="detail-list">
+                        <div><dt>Focus</dt><dd>Urban agriculture and food access</dd></div>
+                        <div><dt>Founded</dt><dd>2016</dd></div>
+                        <div><dt>Contact</dt><dd><a href="mailto:contact@greenharvest.org">contact@greenharvest.org</a></dd></div>
+                    </dl>
+                </div>
+            </article>
+
+            <article class="profile-card">
+                <img src="/images/unityserve-logo.png" alt="UnityServe Volunteers logo">
+                <div class="profile-body">
+                    <h3>UnityServe Volunteers</h3>
+                    <p class="tag-row"><span class="tag">Community Service</span><span class="tag">Health and Wellness</span></p>
+                    <p>UnityServe Volunteers mobilizes people for neighborhood cleanups, food drives, and wellness events that bring communities together.</p>
+                    <dl class="detail-list">
+                        <div><dt>Focus</dt><dd>Volunteer mobilization and outreach</dd></div>
+                        <div><dt>Founded</dt><dd>2009</dd></div>
+                        <div><dt>Contact</dt><dd><a href="mailto:hello@unityserve.org">hello@unityserve.org</a></dd></div>
+                    </dl>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- Why partner -->
+    <section class="home-section" aria-labelledby="why-heading">
+        <h2 id="why-heading">What makes a great partner</h2>
+        <div class="feature-grid">
+            <article class="feature-card">
+                <h3>Local roots</h3>
+                <p>Our partners live and work in the communities they serve, so projects address real neighborhood needs.</p>
+            </article>
+            <article class="feature-card">
+                <h3>Volunteer ready</h3>
+                <p>Each organization provides on-site leaders, supplies, and a clear plan so you can contribute from the first hour.</p>
+            </article>
+            <article class="feature-card">
+                <h3>Measurable impact</h3>
+                <p>Partners report results after every project so volunteers can see the difference their time made.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- Call to action -->
+    <section class="cta-banner" aria-labelledby="cta-heading">
+        <h2 id="cta-heading">Represent an organization?</h2>
+        <p>We are always looking for new partners who need volunteers. Reach out and let us help you grow your impact.</p>
+        <a class="btn btn-light" href="mailto:partners@cse340network.org">Become a Partner</a>
+    </section>
 
 </main>
 

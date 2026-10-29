@@ -1,12 +1,128 @@
 <%- include('partials/header') %>
 
-<main>
-    <h1><%= title %></h1>
+<main class="home">
 
-    <h2>Welcome to the CSE 340 Service Network!</h2>
-    <p>Our mission is to promote service across the world by connecting volunteers with service opportunities in their community.</p>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+        <div class="hero-content">
+            <p class="eyebrow">CSE 340 Service Network</p>
+            <h1 id="hero-heading">Connecting volunteers with service opportunities in their community</h1>
+            <p class="lead">Our mission is to promote service across the world. We match people who want to help with organizations and projects that need them.</p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="/projects">Browse Projects</a>
+                <a class="btn btn-secondary" href="/organizations">Meet Our Partners</a>
+            </div>
+        </div>
+        <img class="main-logo" src="/images/cse340-service-network.png" alt="CSE 340 Service Network logo">
+    </section>
 
-    <img class="main-logo" src="images/cse340-service-network.png" alt="CSE 340 Service Network Logo">
+    <!-- Impact stats -->
+    <section class="stats" aria-label="Our impact">
+        <div class="stat">
+            <span class="stat-number">3</span>
+            <span class="stat-label">Partner organizations</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">4</span>
+            <span class="stat-label">Service categories</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">3</span>
+            <span class="stat-label">Upcoming projects</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Volunteer powered</span>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="home-section" aria-labelledby="how-heading">
+        <h2 id="how-heading">How it works</h2>
+        <div class="feature-grid">
+            <article class="feature-card">
+                <span class="feature-step" aria-hidden="true">1</span>
+                <h3>Find a project</h3>
+                <p>Browse upcoming service projects by category and pick one that matches your interests and schedule.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-step" aria-hidden="true">2</span>
+                <h3>Connect with a partner</h3>
+                <p>Each project is hosted by a trusted partner organization that will welcome you and get you started.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-step" aria-hidden="true">3</span>
+                <h3>Make a difference</h3>
+                <p>Show up, serve, and see the impact of your time in your own neighborhood.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="home-section" aria-labelledby="categories-heading">
+        <h2 id="categories-heading">Ways to serve</h2>
+        <p>Service projects are organized into four categories so you can quickly find the kind of work you care about.</p>
+        <div class="category-grid">
+            <a class="category-card" href="/categories">
+                <h3>Environmental</h3>
+                <p>Park cleanups, tree planting, and recycling drives.</p>
+            </a>
+            <a class="category-card" href="/categories">
+                <h3>Educational</h3>
+                <p>Tutoring, mentoring, and literacy programs.</p>
+            </a>
+            <a class="category-card" href="/categories">
+                <h3>Community Service</h3>
+                <p>Food drives, shelter support, and neighborhood events.</p>
+            </a>
+            <a class="category-card" href="/categories">
+                <h3>Health and Wellness</h3>
+                <p>Health fairs, fitness programs, and wellness outreach.</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Featured projects -->
+    <section class="home-section" aria-labelledby="projects-heading">
+        <h2 id="projects-heading">Upcoming projects</h2>
+        <ul>
+            <li><strong>Park Cleanup</strong>: Join us to clean up local parks and make them beautiful.</li>
+            <li><strong>Food Drive</strong>: Help collect and distribute food to those in need.</li>
+            <li><strong>Community Tutoring</strong>: Volunteer to tutor students in various subjects.</li>
+        </ul>
+        <a class="text-link" href="/projects">See all service projects</a>
+    </section>
+
+    <!-- Partners -->
+    <section class="home-section" aria-labelledby="partners-heading">
+        <h2 id="partners-heading">Our partner organizations</h2>
+        <p>We work alongside local organizations that share our commitment to service.</p>
+        <div class="partner-grid">
+            <article class="partner-card">
+                <img src="/images/brightfuture-logo.png" alt="BrightFuture Builders logo">
+                <h3>BrightFuture Builders</h3>
+                <p>Building safe homes and community spaces for families in need.</p>
+            </article>
+            <article class="partner-card">
+                <img src="/images/greenharvest-logo.png" alt="GreenHarvest Growers logo">
+                <h3>GreenHarvest Growers</h3>
+                <p>Growing community gardens and fighting food insecurity.</p>
+            </article>
+            <article class="partner-card">
+                <img src="/images/unityserve-logo.png" alt="UnityServe Volunteers logo">
+                <h3>UnityServe Volunteers</h3>
+                <p>Mobilizing volunteers for neighborhood events and outreach.</p>
+            </article>
+        </div>
+        <a class="text-link" href="/organizations">Learn more about our partners</a>
+    </section>
+
+    <!-- Call to action -->
+    <section class="cta-banner" aria-labelledby="cta-heading">
+        <h2 id="cta-heading">Ready to serve?</h2>
+        <p>Pick a project today and join a community of volunteers making a difference.</p>
+        <a class="btn btn-light" href="/projects">Get Started</a>
+    </section>
 
 </main>
 
