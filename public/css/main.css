@@ -807,19 +807,89 @@ footer a {
         padding: var(--space-lg);
     }
 
-    .project-list,
     .category-detail-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Project rows: host | details | schedule and sign-up */
+    .project-card {
+        display: grid;
+        grid-template-columns: 7rem 1fr 18rem;
+        grid-template-areas:
+            "host title   details"
+            "host tags    details"
+            "host desc    details"
+            "host desc    action";
+        column-gap: var(--space-lg);
+        row-gap: var(--space-xs);
+        align-items: start;
+        padding: var(--space-lg);
+        border-top: 1px solid var(--color-border);
+        border-left: 4px solid var(--color-accent);
+    }
+
+    .project-card .project-host {
+        grid-area: host;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin: 0;
+        padding-right: var(--space-md);
+        border-right: 1px solid var(--color-border);
+        align-self: stretch;
+    }
+
+    .project-card .project-host img {
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+
+    .project-card h3 {
+        grid-area: title;
+        margin: 0;
+    }
+
+    .project-card .tag-row {
+        grid-area: tags;
+        margin: 0;
+    }
+
+    .project-card > p:not(.tag-row) {
+        grid-area: desc;
+        margin: 0;
+    }
+
+    .project-card .detail-list {
+        grid-area: details;
+        margin: 0;
+        padding-left: var(--space-md);
+        border-left: 1px solid var(--color-border);
+    }
+
+    .project-card .detail-list div {
+        grid-template-columns: 1fr;
+        gap: 0;
+        border-top: 0;
+        padding: 0 0 var(--space-xs);
+    }
+
+    .project-card .detail-list dt {
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+    }
+
+    .project-card .btn {
+        grid-area: action;
+        justify-self: start;
+        margin: var(--space-xs) 0 0 var(--space-md);
     }
 }
 
 @media (min-width: 64em) {
     .category-grid {
         grid-template-columns: repeat(4, 1fr);
-    }
-
-    .project-list {
-        grid-template-columns: repeat(3, 1fr);
     }
 }
 
