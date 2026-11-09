@@ -74,3 +74,46 @@ VALUES
 
 SELECT * FROM project;
 
+-- ========================================
+-- Category Table
+-- ========================================
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT NOT NULL
+);
+
+-- ========================================
+-- Insert sample data: Categories
+-- ========================================
+INSERT INTO category (name, description)
+VALUES
+('Environmental', 'Protect and restore the natural spaces in our community through hands-on outdoor work.'),
+('Educational', 'Help learners of all ages build skills and confidence through tutoring and mentoring.'),
+('Community Service', 'Meet everyday needs and strengthen neighborhoods through direct, practical help.'),
+('Health and Wellness', 'Promote healthy living and connect neighbors with the care and resources they need.');
+
+SELECT * FROM category;
+
+-- ========================================
+-- Link projects to categories by foreign key
+-- (replaces the plain-text category column)
+-- ========================================
+ALTER TABLE project
+    ADD COLUMN category_id INTEGER REFERENCES category(category_id);
+
+UPDATE project p
+SET category_id = c.category_id
+FROM category c
+WHERE c.name = p.category;
+
+ALTER TABLE project
+    ALTER COLUMN category_id SET NOT NULL;
+
+ALTER TABLE project
+    DROP COLUMN category;
+
+SELECT p.name, c.name AS category_name
+FROM project p
+JOIN category c ON c.category_id = p.category_id;
+

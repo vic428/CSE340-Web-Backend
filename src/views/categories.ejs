@@ -1,11 +1,18 @@
 <%- include('partials/header') %>
 
+<%
+    // Format a Date as "November 14, 2026"
+    const formatDate = (date) => new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+%>
+
 <main class="page">
 
     <header class="page-header">
         <p class="eyebrow">Ways to serve</p>
         <h1><%= title %></h1>
-        <p class="lead">Every service project belongs to one of four categories. Pick the kind of work you care about most and find projects and partners that match.</p>
+        <p class="lead">Every service project belongs to one of <%= categories.length %> categories. Pick the kind of work you care about most and find projects and partners that match.</p>
     </header>
 
     <!-- Category details -->
@@ -13,69 +20,30 @@
         <h2 id="categories-heading">Browse categories</h2>
         <div class="category-detail-grid">
 
-            <article class="category-detail">
-                <h3>Environmental</h3>
-                <p>Protect and restore the natural spaces in our community through hands-on outdoor work.</p>
-                <h4>Typical projects</h4>
-                <ul class="plain-list">
-                    <li>Park and trail cleanups</li>
-                    <li>Tree planting and community gardens</li>
-                    <li>Recycling and e-waste drives</li>
-                </ul>
-                <p class="category-partner">
-                    <img src="/images/greenharvest-logo.png" alt="">
-                    Featured partner: GreenHarvest Growers
-                </p>
-                <a class="text-link" href="/projects">See Park Cleanup</a>
-            </article>
+            <% categories.forEach(category => { %>
+                <% const categoryProjects = projects.filter(project => project.category_id === category.category_id); %>
+                <article class="category-detail">
+                    <h3><%= category.name %></h3>
+                    <p><%= category.description %></p>
 
-            <article class="category-detail">
-                <h3>Educational</h3>
-                <p>Help learners of all ages build skills and confidence through tutoring and mentoring.</p>
-                <h4>Typical projects</h4>
-                <ul class="plain-list">
-                    <li>After-school tutoring</li>
-                    <li>Adult literacy and job readiness</li>
-                    <li>Youth mentoring programs</li>
-                </ul>
-                <p class="category-partner">
-                    <img src="/images/brightfuture-logo.png" alt="">
-                    Featured partner: BrightFuture Builders
-                </p>
-                <a class="text-link" href="/projects">See Community Tutoring</a>
-            </article>
+                    <h4>Upcoming projects (<%= category.project_count %>)</h4>
+                    <% if (categoryProjects.length > 0) { %>
+                        <ul class="plain-list">
+                            <% categoryProjects.forEach(project => { %>
+                                <li>
+                                    <strong><%= project.name %></strong>
+                                    with <%= project.organization_name %>
+                                    on <%= formatDate(project.event_date) %>
+                                </li>
+                            <% }); %>
+                        </ul>
+                    <% } else { %>
+                        <p class="category-empty">No projects scheduled yet. Check back soon.</p>
+                    <% } %>
 
-            <article class="category-detail">
-                <h3>Community Service</h3>
-                <p>Meet everyday needs and strengthen neighborhoods through direct, practical help.</p>
-                <h4>Typical projects</h4>
-                <ul class="plain-list">
-                    <li>Food and clothing drives</li>
-                    <li>Shelter and meal service support</li>
-                    <li>Neighborhood events and home repair</li>
-                </ul>
-                <p class="category-partner">
-                    <img src="/images/unityserve-logo.png" alt="">
-                    Featured partner: UnityServe Volunteers
-                </p>
-                <a class="text-link" href="/projects">See Food Drive</a>
-            </article>
-
-            <article class="category-detail">
-                <h3>Health and Wellness</h3>
-                <p>Promote healthy living and connect neighbors with the care and resources they need.</p>
-                <h4>Typical projects</h4>
-                <ul class="plain-list">
-                    <li>Community health fairs</li>
-                    <li>Group fitness and walking clubs</li>
-                    <li>Wellness check-ins for seniors</li>
-                </ul>
-                <p class="category-partner">
-                    <img src="/images/unityserve-logo.png" alt="">
-                    Featured partner: UnityServe Volunteers
-                </p>
-                <a class="text-link" href="/organizations">Meet the partners</a>
-            </article>
+                    <a class="text-link" href="/projects">See all projects</a>
+                </article>
+            <% }); %>
 
         </div>
     </section>
