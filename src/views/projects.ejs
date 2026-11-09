@@ -8,58 +8,52 @@
         <p class="lead">Browse upcoming opportunities to serve. Each project is hosted by one of our partner organizations and open to volunteers of all experience levels.</p>
     </header>
 
+    <%
+        // Format a Date as "Saturday, November 14, 2026" (or without the weekday)
+        const formatDate = (date, withWeekday = true) => new Date(date).toLocaleDateString('en-US', {
+            ...(withWeekday && { weekday: 'long' }), year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        // Format a "HH:MM:SS" time string as "9:00 AM"
+        const formatTime = (time) => {
+            const [hours, minutes] = time.split(':').map(Number);
+            const period = hours >= 12 ? 'PM' : 'AM';
+            const twelveHour = hours % 12 || 12;
+            return `${twelveHour}:${String(minutes).padStart(2, '0')} ${period}`;
+        };
+    %>
+
     <!-- Upcoming projects -->
     <section class="home-section" aria-labelledby="upcoming-heading">
         <h2 id="upcoming-heading">Upcoming service projects</h2>
         <div class="project-list">
 
-            <article class="project-card">
-                <div class="project-host">
-                    <img src="/images/greenharvest-logo.png" alt="GreenHarvest Growers logo">
-                    <span>Hosted by GreenHarvest Growers</span>
-                </div>
-                <h3>Park Cleanup</h3>
-                <p class="tag-row"><span class="tag">Environmental</span></p>
-                <p>Join us to clean up local parks and make them beautiful. We will collect litter, clear trails, and mulch garden beds. Gloves, bags, and tools are provided.</p>
-                <dl class="detail-list">
-                    <div><dt>When</dt><dd>Saturday, November 14, 2026 · 9:00 AM to 12:00 PM</dd></div>
-                    <div><dt>Where</dt><dd>Riverside Community Park, main pavilion</dd></div>
-                    <div><dt>Volunteers needed</dt><dd>25</dd></div>
-                </dl>
-                <a class="btn btn-primary" href="mailto:contact@greenharvest.org?subject=Park%20Cleanup%20volunteer">Sign Up</a>
-            </article>
-
-            <article class="project-card">
-                <div class="project-host">
-                    <img src="/images/unityserve-logo.png" alt="UnityServe Volunteers logo">
-                    <span>Hosted by UnityServe Volunteers</span>
-                </div>
-                <h3>Food Drive</h3>
-                <p class="tag-row"><span class="tag">Community Service</span></p>
-                <p>Help collect and distribute food to those in need. Volunteers will sort donations, pack family boxes, and staff the pickup line at the community center.</p>
-                <dl class="detail-list">
-                    <div><dt>When</dt><dd>Saturday, November 21, 2026 · 10:00 AM to 2:00 PM</dd></div>
-                    <div><dt>Where</dt><dd>Westside Community Center</dd></div>
-                    <div><dt>Volunteers needed</dt><dd>40</dd></div>
-                </dl>
-                <a class="btn btn-primary" href="mailto:hello@unityserve.org?subject=Food%20Drive%20volunteer">Sign Up</a>
-            </article>
-
-            <article class="project-card">
-                <div class="project-host">
-                    <img src="/images/brightfuture-logo.png" alt="BrightFuture Builders logo">
-                    <span>Hosted by BrightFuture Builders</span>
-                </div>
-                <h3>Community Tutoring</h3>
-                <p class="tag-row"><span class="tag">Educational</span></p>
-                <p>Volunteer to tutor students in various subjects. Sessions pair one tutor with one or two students in reading, math, and science for grades 3 through 8.</p>
-                <dl class="detail-list">
-                    <div><dt>When</dt><dd>Every Tuesday starting December 1, 2026 · 4:00 PM to 6:00 PM</dd></div>
-                    <div><dt>Where</dt><dd>Lincoln Branch Library, study rooms</dd></div>
-                    <div><dt>Volunteers needed</dt><dd>15</dd></div>
-                </dl>
-                <a class="btn btn-primary" href="mailto:info@brightfuture.org?subject=Community%20Tutoring%20volunteer">Sign Up</a>
-            </article>
+            <% projects.forEach(project => { %>
+                <article class="project-card">
+                    <div class="project-host">
+                        <img src="/images/<%= project.logo_filename %>" alt="<%= project.organization_name %> logo">
+                        <span>Hosted by <%= project.organization_name %></span>
+                    </div>
+                    <h3>
+                        <span class="project-date"><%= formatDate(project.event_date) %>:</span>
+                        <%= project.name %> (<%= project.organization_name %>)
+                    </h3>
+                    <p class="tag-row"><span class="tag"><%= project.category %></span></p>
+                    <p><%= project.description %></p>
+                    <dl class="detail-list">
+                        <div>
+                            <dt>When</dt>
+                            <dd>
+                                <% if (project.recurrence) { %><%= project.recurrence %> starting <% } %>
+                                <%= formatDate(project.event_date, !project.recurrence) %> · <%= formatTime(project.start_time) %> to <%= formatTime(project.end_time) %>
+                            </dd>
+                        </div>
+                        <div><dt>Where</dt><dd><%= project.location %></dd></div>
+                        <div><dt>Volunteers needed</dt><dd><%= project.volunteers_needed %></dd></div>
+                    </dl>
+                    <a class="btn btn-primary" href="mailto:<%= project.contact_email %>?subject=<%= encodeURIComponent(project.name + ' volunteer') %>">Sign Up</a>
+                </article>
+            <% }); %>
 
         </div>
     </section>
