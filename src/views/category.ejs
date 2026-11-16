@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+
+<%
+    // Format a Date as "November 14, 2026"
+    const formatDate = (date) => new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+%>
+
+<main class="page">
+
+    <header class="page-header">
+        <p class="eyebrow">Service category</p>
+        <h1><%= title %></h1>
+    </header>
+
+    <!-- Category profile -->
+    <section class="home-section" aria-labelledby="category-heading">
+        <article class="category-detail">
+            <h2 id="category-heading"><%= category.name %></h2>
+            <p><%= category.description %></p>
+        </article>
+    </section>
+
+    <!-- Service projects in this category -->
+    <section class="home-section" aria-labelledby="projects-heading">
+        <h3 id="projects-heading">Service Projects (<%= projects.length %>)</h3>
+        <% if (projects.length > 0) { %>
+            <ul class="plain-list">
+                <% projects.forEach(project => { %>
+                    <li>
+                        <strong><a href="/project/<%= project.project_id %>"><%= project.name %></a></strong>
+                        with <a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a>
+                        on <%= formatDate(project.event_date) %>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p class="category-empty">No projects in this category yet. Check back soon.</p>
+        <% } %>
+        <a class="text-link" href="/categories">Back to all categories</a>
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>

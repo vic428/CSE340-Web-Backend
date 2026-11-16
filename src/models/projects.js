@@ -155,10 +155,50 @@ const getProjectDetails = async (projectId) => {
     return result.rows.length > 0 ? result.rows[0] : null;
 };
 
+/**
+ * Retrieves all service projects in a given category, ordered by event
+ * date and start time, with the hosting organization's name joined in.
+ *
+ * Uses a parameterized query ($1) so the ID is never interpolated into the
+ * SQL string, which protects against SQL injection.
+ */
+const getProjectsByCategoryId = async (categoryId) => {
+    const query = `
+        SELECT
+            p.project_id,
+            p.name,
+            p.name AS title,
+            p.description,
+            p.event_date,
+            p.event_date AS date,
+            p.start_time,
+            p.end_time,
+            p.recurrence,
+            p.location,
+            p.volunteers_needed,
+            p.organization_id,
+            o.name AS organization_name,
+            o.logo_filename,
+            c.category_id,
+            c.name AS category
+        FROM public.project p
+        JOIN public.organization o ON o.organization_id = p.organization_id
+        JOIN public.project_categories c ON c.category_id = p.category_id
+        WHERE p.category_id = $1
+        ORDER BY p.event_date, p.start_time;
+    `;
+
+    const queryParams = [categoryId];
+    const result = await db.query(query, queryParams);
+
+    return result.rows;
+};
+
 // Export the model functions
 export {
     getAllProjects,
     getProjectsByOrganizationId,
     getUpcomingProjects,
-    getProjectDetails
+    getProjectDetails,
+    getProjectsByCategoryId
 };

@@ -23,7 +23,7 @@
             <% categories.forEach(category => { %>
                 <% const categoryProjects = projects.filter(project => project.category_id === category.category_id); %>
                 <article class="category-detail">
-                    <h3><%= category.name %></h3>
+                    <h3><a href="/category/<%= category.category_id %>"><%= category.name %></a></h3>
                     <p><%= category.description %></p>
 
                     <h4>Upcoming projects (<%= category.project_count %>)</h4>
@@ -31,7 +31,7 @@
                         <ul class="plain-list">
                             <% categoryProjects.forEach(project => { %>
                                 <li>
-                                    <strong><%= project.name %></strong>
+                                    <strong><a href="/project/<%= project.project_id %>"><%= project.name %></a></strong>
                                     with <%= project.organization_name %>
                                     on <%= formatDate(project.event_date) %>
                                 </li>
@@ -41,7 +41,7 @@
                         <p class="category-empty">No projects scheduled yet. Check back soon.</p>
                     <% } %>
 
-                    <a class="text-link" href="/projects">See all projects</a>
+                    <a class="text-link" href="/category/<%= category.category_id %>">View category</a>
                 </article>
             <% }); %>
 

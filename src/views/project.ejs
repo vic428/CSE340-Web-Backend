@@ -30,7 +30,11 @@
                 <span>Hosted by <a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a></span>
             </div>
             <h2 id="project-heading"><%= project.name %></h2>
-            <p class="tag-row"><span class="tag"><%= project.category %></span></p>
+            <p class="tag-row">
+                <% categories.forEach(category => { %>
+                    <a class="tag" href="/category/<%= category.category_id %>"><%= category.name %></a>
+                <% }); %>
+            </p>
             <p><%= project.description %></p>
             <dl class="detail-list">
                 <div>
