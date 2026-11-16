@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+
+<main class="page">
+
+    <%
+        // Format a Date as "Saturday, November 14, 2026" (or without the weekday)
+        const formatDate = (date, withWeekday = true) => new Date(date).toLocaleDateString('en-US', {
+            ...(withWeekday && { weekday: 'long' }), year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        // Format a "HH:MM:SS" time string as "9:00 AM"
+        const formatTime = (time) => {
+            const [hours, minutes] = time.split(':').map(Number);
+            const period = hours >= 12 ? 'PM' : 'AM';
+            const twelveHour = hours % 12 || 12;
+            return `${twelveHour}:${String(minutes).padStart(2, '0')} ${period}`;
+        };
+    %>
+
+    <header class="page-header">
+        <p class="eyebrow">Service project</p>
+        <h1><%= title %></h1>
+    </header>
+
+    <!-- Project details -->
+    <section class="home-section" aria-labelledby="project-heading">
+        <article class="project-card">
+            <div class="project-host">
+                <img src="/images/<%= project.logo_filename %>" alt="<%= project.organization_name %> logo">
+                <span>Hosted by <a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a></span>
+            </div>
+            <h2 id="project-heading"><%= project.name %></h2>
+            <p class="tag-row"><span class="tag"><%= project.category %></span></p>
+            <p><%= project.description %></p>
+            <dl class="detail-list">
+                <div>
+                    <dt>Date</dt>
+                    <dd><%= formatDate(project.event_date) %></dd>
+                </div>
+                <div>
+                    <dt>Time</dt>
+                    <dd>
+                        <%= formatTime(project.start_time) %> to <%= formatTime(project.end_time) %>
+                        <% if (project.recurrence) { %>(<%= project.recurrence %>)<% } %>
+                    </dd>
+                </div>
+                <div>
+                    <dt>Location</dt>
+                    <dd><%= project.location %></dd>
+                </div>
+                <div>
+                    <dt>Organization</dt>
+                    <dd><a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a></dd>
+                </div>
+                <div>
+                    <dt>Volunteers needed</dt>
+                    <dd><%= project.volunteers_needed %></dd>
+                </div>
+            </dl>
+            <a class="btn btn-primary" href="mailto:<%= project.contact_email %>?subject=<%= encodeURIComponent(project.name + ' volunteer') %>">Sign Up</a>
+        </article>
+        <a class="text-link" href="/projects">Back to upcoming projects</a>
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>

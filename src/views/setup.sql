@@ -70,6 +70,51 @@ VALUES
     '2026-12-01', '16:00', '18:00', 'Every Tuesday',
     'Lincoln Branch Library, study rooms',
     15
+),
+(
+    (SELECT organization_id FROM organization WHERE name = 'GreenHarvest Growers'),
+    'Community Garden Planting',
+    'Help prepare raised beds and plant winter greens at our urban farm. Volunteers will turn soil, spread compost, and plant seedlings. No experience needed.',
+    'Environmental',
+    '2026-11-28', '08:00', '11:00', NULL,
+    'GreenHarvest Urban Farm, 4th Street lot',
+    20
+),
+(
+    (SELECT organization_id FROM organization WHERE name = 'UnityServe Volunteers'),
+    'Senior Wellness Fair',
+    'Support a free health fair for older neighbors. Volunteers will greet guests, guide them between screening stations, and help with setup and cleanup.',
+    'Health and Wellness',
+    '2026-12-05', '10:00', '15:00', NULL,
+    'Maplewood Senior Center',
+    30
+),
+(
+    (SELECT organization_id FROM organization WHERE name = 'BrightFuture Builders'),
+    'Shelter Dog Walk Day',
+    'Give shelter dogs a morning outdoors. Volunteers will walk dogs on the shelter trail, refill water stations, and help with kennel cleaning afterward.',
+    'Animal Welfare',
+    '2026-12-12', '09:00', '12:00', NULL,
+    'Riverside Animal Shelter',
+    18
+),
+(
+    (SELECT organization_id FROM organization WHERE name = 'GreenHarvest Growers'),
+    'Holiday Meal Packing',
+    'Pack holiday meal boxes for families in need. Volunteers will assemble boxes with fresh produce from the farm and pantry staples, then load them for delivery.',
+    'Community Service',
+    '2026-12-19', '13:00', '17:00', NULL,
+    'Westside Community Center kitchen',
+    35
+),
+(
+    (SELECT organization_id FROM organization WHERE name = 'UnityServe Volunteers'),
+    'Winter Coat Drive',
+    'Collect and sort donated winter coats for neighbors facing the cold. Volunteers will check items, organize by size, and staff the pickup table.',
+    'Community Service',
+    '2027-01-09', '10:00', '14:00', NULL,
+    'Lincoln Branch Library lobby',
+    20
 );
 
 SELECT * FROM project;
