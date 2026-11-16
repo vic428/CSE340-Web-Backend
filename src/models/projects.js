@@ -5,7 +5,7 @@ import db from './db.js';
  * email of the organization hosting each one, and the category name.
  *
  * The project table stores only organization_id and category_id, so JOINs
- * against the organization and category tables pull in their details.
+ * against the organization and project_categories tables pull in their details.
  */
 const getAllProjects = async () => {
     const query = `
@@ -27,7 +27,7 @@ const getAllProjects = async () => {
             c.name AS category
         FROM public.project p
         JOIN public.organization o ON o.organization_id = p.organization_id
-        JOIN public.category c ON c.category_id = p.category_id
+        JOIN public.project_categories c ON c.category_id = p.category_id
         ORDER BY p.event_date, p.start_time;
     `;
 

@@ -14,7 +14,7 @@ const getAllCategories = async () => {
             c.name,
             c.description,
             COUNT(p.project_id)::INTEGER AS project_count
-        FROM public.category c
+        FROM public.project_categories c
         LEFT JOIN public.project p ON p.category_id = c.category_id
         GROUP BY c.category_id, c.name, c.description
         ORDER BY c.category_id;

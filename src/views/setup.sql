@@ -75,9 +75,9 @@ VALUES
 SELECT * FROM project;
 
 -- ========================================
--- Category Table
+-- Project Categories Table
 -- ========================================
-CREATE TABLE category (
+CREATE TABLE project_categories (
     category_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT NOT NULL
@@ -86,25 +86,26 @@ CREATE TABLE category (
 -- ========================================
 -- Insert sample data: Categories
 -- ========================================
-INSERT INTO category (name, description)
+INSERT INTO project_categories (name, description)
 VALUES
 ('Environmental', 'Protect and restore the natural spaces in our community through hands-on outdoor work.'),
 ('Educational', 'Help learners of all ages build skills and confidence through tutoring and mentoring.'),
 ('Community Service', 'Meet everyday needs and strengthen neighborhoods through direct, practical help.'),
-('Health and Wellness', 'Promote healthy living and connect neighbors with the care and resources they need.');
+('Health and Wellness', 'Promote healthy living and connect neighbors with the care and resources they need.'),
+('Animal Welfare', 'Care for shelter animals and support adoption, fostering, and rescue efforts across the community.');
 
-SELECT * FROM category;
+SELECT * FROM project_categories;
 
 -- ========================================
 -- Link projects to categories by foreign key
 -- (replaces the plain-text category column)
 -- ========================================
 ALTER TABLE project
-    ADD COLUMN category_id INTEGER REFERENCES category(category_id);
+    ADD COLUMN category_id INTEGER REFERENCES project_categories(category_id);
 
 UPDATE project p
 SET category_id = c.category_id
-FROM category c
+FROM project_categories c
 WHERE c.name = p.category;
 
 ALTER TABLE project
@@ -115,5 +116,11 @@ ALTER TABLE project
 
 SELECT p.name, c.name AS category_name
 FROM project p
-JOIN category c ON c.category_id = p.category_id;
+JOIN project_categories c ON c.category_id = p.category_id;
 
+ALTER TABLE public.category RENAME TO project_categories;
+
+INSERT INTO public.project_categories (name, description)
+VALUES ('Animal Welfare', 'Care for shelter animals and support adoption, fostering, and rescue efforts across the community.');
+
+SELECT * FROM public.project_categories;
