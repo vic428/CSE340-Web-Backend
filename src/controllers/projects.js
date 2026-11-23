@@ -1,5 +1,5 @@
 // Import any needed model functions
-import { getUpcomingProjects, getProjectDetails, createProject } from '../models/projects.js';
+import { getUpcomingProjects, getProjectDetails, createProject, updateProject } from '../models/projects.js';
 import { getAllCategories, getCategoriesByProjectId } from '../models/categories.js';
 import { getAllOrganizations } from '../models/organizations.js';
 import { body, validationResult } from 'express-validator';
@@ -7,9 +7,9 @@ import { body, validationResult } from 'express-validator';
 // Matches a 24-hour time such as "09:00" or "17:30" (seconds optional)
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/;
 
-// Define validation and sanitization rules for the project form.
-// .bail() stops at the first failed rule so each field reports one message.
-const projectValidation = [
+// Define validation and sanitization rules shared by the new and edit project
+// forms. .bail() stops at the first failed rule so each field reports one message.
+const projectFieldValidation = [
     body('title')
         .trim()
         .notEmpty()
@@ -77,7 +77,12 @@ const projectValidation = [
         .withMessage('Please select an organization')
         .bail()
         .isInt({ min: 1 })
-        .withMessage('Please select a valid organization'),
+        .withMessage('Please select a valid organization')
+];
+
+// The new project form also picks the project's first category
+const projectValidation = [
+    ...projectFieldValidation,
     body('categoryId')
         .trim()
         .notEmpty()
@@ -86,6 +91,20 @@ const projectValidation = [
         .isInt({ min: 1 })
         .withMessage('Please select a valid category')
 ];
+
+// The edit project form has no category field (categories are edited on
+// the assign categories page), so it uses only the shared rules
+const projectEditValidation = projectFieldValidation;
+
+// Format a Date from the database as "YYYY-MM-DD" for an <input type="date">.
+// Local date parts are used because the database driver creates the Date at
+// local midnight; converting to UTC first could shift it to the previous day.
+const toDateInputValue = (date) => {
+    const value = new Date(date);
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${value.getFullYear()}-${month}-${day}`;
+};
 
 // How many upcoming projects the projects page should list
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
@@ -163,11 +182,86 @@ const processNewProjectForm = async (req, res) => {
     }
 };
 
+const showEditProjectForm = async (req, res, next) => {
+    const projectId = req.params.id;
+    const project = await getProjectDetails(projectId);
+
+    // No project with this ID: hand a 404 to the global error handler
+    if (!project) {
+        const err = new Error('Project Not Found');
+        err.status = 404;
+        return next(err);
+    }
+
+    // The list of organizations populates the dropdown menu on the form
+    const organizations = await getAllOrganizations();
+
+    // Convert the stored date and times to the formats the form inputs expect
+    const formValues = {
+        date: toDateInputValue(project.event_date),
+        startTime: project.start_time.slice(0, 5), // "09:00:00" -> "09:00"
+        endTime: project.end_time.slice(0, 5)
+    };
+
+    const title = 'Edit Service Project';
+    res.render('edit-project', { title, project, organizations, formValues });
+};
+
+const processEditProjectForm = async (req, res, next) => {
+    const projectId = req.params.id;
+
+    // No project with this ID: hand a 404 to the global error handler
+    const project = await getProjectDetails(projectId);
+    if (!project) {
+        const err = new Error('Project Not Found');
+        err.status = 404;
+        return next(err);
+    }
+
+    // Check for validation errors
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        // Validation failed - loop through errors
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Redirect back to the edit project form
+        return res.redirect('/edit-project/' + projectId);
+    }
+
+    // Extract form data from req.body
+    const {
+        title, description, location, date, organizationId,
+        startTime, endTime, volunteersNeeded, recurrence
+    } = req.body;
+
+    try {
+        await updateProject(projectId, title, description, location, date, organizationId, {
+            startTime,
+            endTime,
+            volunteersNeeded,
+            recurrence: recurrence || null // Store "no recurrence" as NULL
+        });
+
+        // Set a success flash message
+        req.flash('success', 'Service project updated successfully!');
+        res.redirect(`/project/${projectId}`);
+    } catch (error) {
+        console.error('Error updating project:', error);
+        req.flash('error', 'There was an error updating the service project.');
+        res.redirect('/edit-project/' + projectId);
+    }
+};
+
 // Export any controller functions
 export {
     showProjectsPage,
     showProjectDetailsPage,
     showNewProjectForm,
     processNewProjectForm,
-    projectValidation
+    showEditProjectForm,
+    processEditProjectForm,
+    projectValidation,
+    projectEditValidation
 };

@@ -283,9 +283,65 @@ const createProject = async (title, description, location, date, organizationId,
     return result.rows[0].project_id;
 };
 
+/**
+ * Updates an existing service project in the database.
+ *
+ * The organization id is part of the update, so a project can be moved to
+ * a different organization. Categories are not changed here; they are
+ * managed through the project_category table (see updateCategoryAssignments).
+ *
+ * @param {string|number} projectId - The id of the project to update.
+ * @param {string} title - The name of the project.
+ * @param {string} description - A description of the project.
+ * @param {string} location - Where the project takes place.
+ * @param {string} date - The date of the project (YYYY-MM-DD).
+ * @param {string|number} organizationId - The id of the hosting organization.
+ * @param {object} details - The remaining project fields.
+ * @param {string} details.startTime - Start time (HH:MM).
+ * @param {string} details.endTime - End time (HH:MM).
+ * @param {string|number} details.volunteersNeeded - Number of volunteers needed.
+ * @param {string} [details.recurrence] - Optional recurrence, e.g. "Weekly".
+ * @returns {number} The id of the updated project record.
+ */
+const updateProject = async (projectId, title, description, location, date, organizationId, details = {}) => {
+    const { startTime, endTime, volunteersNeeded, recurrence = null } = details;
+
+    const query = `
+      UPDATE project
+      SET name = $1,
+          description = $2,
+          location = $3,
+          event_date = $4,
+          organization_id = $5,
+          start_time = $6,
+          end_time = $7,
+          volunteers_needed = $8,
+          recurrence = $9
+      WHERE project_id = $10
+      RETURNING project_id;
+    `;
+
+    const queryParams = [
+        title, description, location, date, organizationId,
+        startTime, endTime, volunteersNeeded, recurrence, projectId
+    ];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Project not found');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Updated project with ID:', projectId);
+    }
+
+    return result.rows[0].project_id;
+};
+
 // Export the model functions
 export {
     createProject,
+    updateProject,
     getAllProjects,
     getProjectsByOrganizationId,
     getUpcomingProjects,

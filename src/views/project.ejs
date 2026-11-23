@@ -62,7 +62,10 @@
                     <dd><%= project.volunteers_needed %></dd>
                 </div>
             </dl>
-            <a class="btn btn-primary" href="mailto:<%= project.contact_email %>?subject=<%= encodeURIComponent(project.name + ' volunteer') %>">Sign Up</a>
+            <div class="form-actions">
+                <a class="btn btn-primary" href="mailto:<%= project.contact_email %>?subject=<%= encodeURIComponent(project.name + ' volunteer') %>">Sign Up</a>
+                <a class="btn btn-secondary" href="/edit-project/<%= project.project_id %>">Edit Project</a>
+            </div>
         </article>
         <a class="text-link" href="/projects">Back to upcoming projects</a>
     </section>
