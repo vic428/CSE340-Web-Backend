@@ -21,7 +21,7 @@
         <div class="category-detail-grid">
 
             <% categories.forEach(category => { %>
-                <% const categoryProjects = projects.filter(project => project.category_id === category.category_id); %>
+                <% const categoryProjects = projects.filter(project => project.categories.some(assigned => assigned.category_id === category.category_id)); %>
                 <article class="category-detail">
                     <h3><a href="/category/<%= category.category_id %>"><%= category.name %></a></h3>
                     <p><%= category.description %></p>

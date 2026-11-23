@@ -1,11 +1,35 @@
 import db from './db.js';
 
 /**
+ * A project can have several categories, stored in the many-to-many
+ * project_category table. This join adds two columns to a project query:
+ *   cat.categories - a JSON array of { category_id, name }, ordered by name
+ *   cat.category   - the category names as one comma-separated string
+ *
+ * The subquery always returns exactly one row, so projects with no
+ * categories still appear (with an empty array and a NULL string).
+ * It expects the project table to be aliased as "p".
+ */
+const PROJECT_CATEGORIES_JOIN = `
+        LEFT JOIN LATERAL (
+            SELECT
+                COALESCE(
+                    json_agg(json_build_object('category_id', c.category_id, 'name', c.name) ORDER BY c.name),
+                    '[]'::json
+                ) AS categories,
+                string_agg(c.name, ', ' ORDER BY c.name) AS category
+            FROM public.project_category pc
+            JOIN public.project_categories c ON c.category_id = pc.category_id
+            WHERE pc.project_id = p.project_id
+        ) cat ON true`;
+
+/**
  * Retrieves all service projects along with the name, logo, and contact
  * email of the organization hosting each one, and the category name.
  *
- * The project table stores only organization_id and category_id, so JOINs
- * against the organization and project_categories tables pull in their details.
+ * The project table stores only organization_id, so a JOIN against the
+ * organization table pulls in its details, and the project's categories
+ * come from the project_category link table.
  */
 const getAllProjects = async () => {
     const query = `
@@ -23,11 +47,11 @@ const getAllProjects = async () => {
             o.name AS organization_name,
             o.logo_filename,
             o.contact_email,
-            c.category_id,
-            c.name AS category
+            cat.categories,
+            cat.category
         FROM public.project p
         JOIN public.organization o ON o.organization_id = p.organization_id
-        JOIN public.project_categories c ON c.category_id = p.category_id
+        ${PROJECT_CATEGORIES_JOIN}
         ORDER BY p.event_date, p.start_time;
     `;
 
@@ -57,10 +81,10 @@ const getProjectsByOrganizationId = async (organizationId) => {
             p.recurrence,
             p.location,
             p.volunteers_needed,
-            c.category_id,
-            c.name AS category
+            cat.categories,
+            cat.category
         FROM public.project p
-        JOIN public.project_categories c ON c.category_id = p.category_id
+        ${PROJECT_CATEGORIES_JOIN}
         WHERE p.organization_id = $1
         ORDER BY p.event_date, p.start_time;
     `;
@@ -99,11 +123,11 @@ const getUpcomingProjects = async (numberOfProjects) => {
             o.name AS organization_name,
             o.logo_filename,
             o.contact_email,
-            c.category_id,
-            c.name AS category
+            cat.categories,
+            cat.category
         FROM public.project p
         JOIN public.organization o ON o.organization_id = p.organization_id
-        JOIN public.project_categories c ON c.category_id = p.category_id
+        ${PROJECT_CATEGORIES_JOIN}
         WHERE p.event_date >= CURRENT_DATE
         ORDER BY p.event_date ASC, p.start_time ASC
         LIMIT $1;
@@ -140,11 +164,11 @@ const getProjectDetails = async (projectId) => {
             o.name AS organization_name,
             o.logo_filename,
             o.contact_email,
-            c.category_id,
-            c.name AS category
+            cat.categories,
+            cat.category
         FROM public.project p
         JOIN public.organization o ON o.organization_id = p.organization_id
-        JOIN public.project_categories c ON c.category_id = p.category_id
+        ${PROJECT_CATEGORIES_JOIN}
         WHERE p.project_id = $1;
     `;
 
@@ -179,12 +203,17 @@ const getProjectsByCategoryId = async (categoryId) => {
             p.organization_id,
             o.name AS organization_name,
             o.logo_filename,
-            c.category_id,
-            c.name AS category
+            cat.categories,
+            cat.category
         FROM public.project p
         JOIN public.organization o ON o.organization_id = p.organization_id
-        JOIN public.project_categories c ON c.category_id = p.category_id
-        WHERE p.category_id = $1
+        ${PROJECT_CATEGORIES_JOIN}
+        WHERE EXISTS (
+            SELECT 1
+            FROM public.project_category pc
+            WHERE pc.project_id = p.project_id
+              AND pc.category_id = $1
+        )
         ORDER BY p.event_date, p.start_time;
     `;
 
@@ -194,8 +223,69 @@ const getProjectsByCategoryId = async (categoryId) => {
     return result.rows;
 };
 
+/**
+ * Creates a new service project in the database.
+ *
+ * The project table stores the title in the `name` column and the date in
+ * `event_date`. It also requires a start time, end time, number of
+ * volunteers, and category, none of which have defaults, so they are passed
+ * in the `details` object.
+ *
+ * @param {string} title - The name of the project.
+ * @param {string} description - A description of the project.
+ * @param {string} location - Where the project takes place.
+ * @param {string} date - The date of the project (YYYY-MM-DD).
+ * @param {string|number} organizationId - The id of the hosting organization.
+ * @param {object} details - The remaining required project fields.
+ * @param {string} details.startTime - Start time (HH:MM).
+ * @param {string} details.endTime - End time (HH:MM).
+ * @param {string|number} details.volunteersNeeded - Number of volunteers needed.
+ * @param {string|number} details.categoryId - The id of the project's category.
+ * @param {string} [details.recurrence] - Optional recurrence, e.g. "Weekly".
+ * @returns {number} The id of the newly created project record.
+ */
+const createProject = async (title, description, location, date, organizationId, details = {}) => {
+    const { startTime, endTime, volunteersNeeded, categoryId, recurrence = null } = details;
+
+    // The category is saved twice in one statement: in the project table's
+    // required category_id column, and in the project_category link table
+    // that the rest of the site reads from.
+    const query = `
+      WITH new_project AS (
+          INSERT INTO project (
+              name, description, location, event_date, organization_id,
+              start_time, end_time, volunteers_needed, category_id, recurrence
+          )
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          RETURNING project_id, category_id
+      ),
+      new_link AS (
+          INSERT INTO project_category (project_id, category_id)
+          SELECT project_id, category_id FROM new_project
+      )
+      SELECT project_id FROM new_project;
+    `;
+
+    const queryParams = [
+        title, description, location, date, organizationId,
+        startTime, endTime, volunteersNeeded, categoryId, recurrence
+    ];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create project');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Created new project with ID:', result.rows[0].project_id);
+    }
+
+    return result.rows[0].project_id;
+};
+
 // Export the model functions
 export {
+    createProject,
     getAllProjects,
     getProjectsByOrganizationId,
     getUpcomingProjects,

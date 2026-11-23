@@ -941,3 +941,217 @@ footer a {
         background: #ffffff;
     }
 }
+
+
+/* Flash message styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.alert.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.alert.warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+.alert.info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+/* --------------------------------------------------------------------------
+   Forms
+   -------------------------------------------------------------------------- */
+.form {
+    display: grid;
+    gap: var(--space-md);
+    max-width: 40rem;
+}
+
+.form-group {
+    display: grid;
+    gap: var(--space-xs);
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    font: inherit;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid #8a94a3;          /* 3:1+ against white for a visible field edge */
+    border-radius: var(--radius);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group textarea {
+    min-height: 8rem;
+    resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.8;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+    border-color: var(--color-primary);
+}
+
+.form-group input:focus-visible,
+.form-group select:focus-visible,
+.form-group textarea:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+}
+
+.form-hint {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+}
+
+/* Buttons that are real <button> elements need the font and cursor set */
+button.btn {
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+@media (max-width: 30em) {
+    .form-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Action strip (short prompt with a button, e.g. "Add a new organization")
+   -------------------------------------------------------------------------- */
+.action-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-md);
+    background-color: var(--color-accent-light);
+    border-top: 4px solid var(--color-accent);
+}
+
+.action-strip h2 {
+    margin: 0 0 var(--space-xs);
+    font-size: 1.35rem;
+}
+
+.action-strip p {
+    margin: 0;
+    color: var(--color-text);
+}
+
+.action-strip .btn {
+    flex-shrink: 0;
+}
+
+@media (min-width: 48em) {
+    .action-strip {
+        padding: var(--space-lg);
+    }
+}
+
+@media (max-width: 30em) {
+    .action-strip .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Action buttons under an organization profile (e.g. Edit Organization) */
+.profile-actions {
+    margin: var(--space-md) 0 0;
+}
+
+/* Two fields side by side (e.g. start and end time); stacks on narrow screens */
+.form-row {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+}
+
+.form-optional {
+    font-weight: 400;
+    color: var(--color-text-muted);
+}
+
+/* Checkbox list (e.g. assigning categories to a project) */
+.checkbox-group {
+    display: grid;
+    gap: var(--space-xs);
+    margin: 0;
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.checkbox-group legend {
+    padding: 0 var(--space-xs);
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+}
+
+.checkbox-option input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+}
+
+.checkbox-option input[type="checkbox"]:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+}
+
+.checkbox-option label {
+    cursor: pointer;
+}

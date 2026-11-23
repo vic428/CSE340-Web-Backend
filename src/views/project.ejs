@@ -34,6 +34,7 @@
                 <% categories.forEach(category => { %>
                     <a class="tag" href="/category/<%= category.category_id %>"><%= category.name %></a>
                 <% }); %>
+                <a class="text-link" href="/assign-categories/<%= project.project_id %>">Edit Categories</a>
             </p>
             <p><%= project.description %></p>
             <dl class="detail-list">

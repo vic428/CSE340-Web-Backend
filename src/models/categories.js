@@ -15,7 +15,8 @@ const getAllCategories = async () => {
             c.description,
             COUNT(p.project_id)::INTEGER AS project_count
         FROM public.project_categories c
-        LEFT JOIN public.project p ON p.category_id = c.category_id
+        LEFT JOIN public.project_category pc ON pc.category_id = c.category_id
+        LEFT JOIN public.project p ON p.project_id = pc.project_id
         GROUP BY c.category_id, c.name, c.description
         ORDER BY c.category_id;
     `;
@@ -51,9 +52,8 @@ const getCategoryDetails = async (categoryId) => {
 /**
  * Retrieves all categories assigned to a given service project.
  *
- * Each project currently has one category (project.category_id), but the
- * function returns an array so views can render category tags the same
- * way whether a project has one category or several.
+ * Assignments live in the many-to-many project_category table, so a
+ * project can have none, one, or several categories.
  */
 const getCategoriesByProjectId = async (projectId) => {
     const query = `
@@ -62,8 +62,8 @@ const getCategoriesByProjectId = async (projectId) => {
             c.name,
             c.description
         FROM public.project_categories c
-        JOIN public.project p ON p.category_id = c.category_id
-        WHERE p.project_id = $1
+        JOIN public.project_category pc ON pc.category_id = c.category_id
+        WHERE pc.project_id = $1
         ORDER BY c.name;
     `;
 
@@ -73,5 +73,39 @@ const getCategoriesByProjectId = async (projectId) => {
     return result.rows;
 };
 
+/**
+ * Assigns one category to a project by adding a row to the many-to-many
+ * project_category table. Assigning the same pair twice is ignored.
+ */
+const assignCategoryToProject = async (projectId, categoryId) => {
+    const query = `
+        INSERT INTO public.project_category (project_id, category_id)
+        VALUES ($1, $2)
+        ON CONFLICT DO NOTHING;
+    `;
+
+    await db.query(query, [projectId, categoryId]);
+};
+
+/**
+ * Replaces the categories assigned to a project with the given list.
+ *
+ * @param {string|number} projectId - The id of the project to update.
+ * @param {Array<string|number>} categoryIds - The category ids the project should have.
+ */
+const updateCategoryAssignments = async (projectId, categoryIds) => {
+    // First, remove existing category assignments for the project
+    const deleteQuery = `
+        DELETE FROM public.project_category
+        WHERE project_id = $1;
+    `;
+    await db.query(deleteQuery, [projectId]);
+
+    // Next, add the new category assignments
+    for (const categoryId of categoryIds) {
+        await assignCategoryToProject(projectId, categoryId);
+    }
+};
+
 // Export the model functions
-export { getAllCategories, getCategoryDetails, getCategoriesByProjectId };
+export { getAllCategories, getCategoryDetails, getCategoriesByProjectId, updateCategoryAssignments };

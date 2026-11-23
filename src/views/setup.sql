@@ -169,3 +169,21 @@ INSERT INTO public.project_categories (name, description)
 VALUES ('Animal Welfare', 'Care for shelter animals and support adoption, fostering, and rescue efforts across the community.');
 
 SELECT * FROM public.project_categories;
+
+-- ---------------------------------------------------------------------------
+-- Many-to-many link between projects and categories
+-- (lets a project have several categories; used by /assign-categories/:projectId)
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.project_category (
+    project_id  INTEGER NOT NULL REFERENCES public.project(project_id) ON DELETE CASCADE,
+    category_id INTEGER NOT NULL REFERENCES public.project_categories(category_id) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, category_id)
+);
+
+-- Copy the single category each project already has into the link table
+INSERT INTO public.project_category (project_id, category_id)
+SELECT project_id, category_id
+FROM public.project
+ON CONFLICT DO NOTHING;
+
+SELECT * FROM public.project_category ORDER BY project_id, category_id;

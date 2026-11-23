@@ -1,0 +1,78 @@
+<%- include('partials/header') %>
+
+<main class="page">
+
+    <header class="page-header">
+        <p class="eyebrow">Partner organization</p>
+        <h1><%= title %></h1>
+        <p class="lead">Update the details for <%= organizationDetails.name %>. All fields are required.</p>
+    </header>
+
+    <section class="home-section">
+
+        <form class="form" action="/edit-organization/<%= organizationDetails.organization_id %>" method="POST">
+            <div class="form-group">
+                <label for="name">Organization Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="<%= organizationDetails.name %>"
+                    autocomplete="organization"
+                    maxlength="150"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="5"
+                    aria-describedby="description-hint"
+                    maxlength="500"
+                    required
+                ><%= organizationDetails.description %></textarea>
+                <p class="form-hint" id="description-hint">A sentence or two about what the organization does and who it serves.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="contactEmail">Contact Email</label>
+                <input
+                    type="email"
+                    id="contactEmail"
+                    name="contactEmail"
+                    value="<%= organizationDetails.contact_email %>"
+                    autocomplete="email"
+                    placeholder="name@example.org"
+                    maxlength="255"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="logoFilename">Logo Filename</label>
+                <input
+                    type="text"
+                    id="logoFilename"
+                    name="logoFilename"
+                    value="<%= organizationDetails.logo_filename %>"
+                    aria-describedby="logo-hint"
+                    maxlength="255"
+                    required
+                />
+                <p class="form-hint" id="logo-hint">The name of an image file in the site's images folder, for example placeholder-logo.png.</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Update Organization</button>
+                <a class="btn btn-secondary" href="/organization/<%= organizationDetails.organization_id %>">Cancel</a>
+            </div>
+        </form>
+
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>

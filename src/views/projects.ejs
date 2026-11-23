@@ -39,7 +39,11 @@
                         <a href="/project/<%= project.project_id %>"><%= project.name %></a>
                         (<a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a>)
                     </h3>
-                    <p class="tag-row"><span class="tag"><%= project.category %></span></p>
+                    <p class="tag-row">
+                        <% project.categories.forEach(category => { %>
+                            <span class="tag"><%= category.name %></span>
+                        <% }); %>
+                    </p>
                     <p><%= project.description %></p>
                     <dl class="detail-list">
                         <div>
@@ -86,6 +90,15 @@
         <h2 id="cta-heading">Looking for something specific?</h2>
         <p>Projects are grouped into categories so you can find the kind of service that fits you best.</p>
         <a class="btn btn-light" href="/categories">Browse by Category</a>
+    </section>
+
+    <!-- Add a new service project -->
+    <section class="action-strip" aria-labelledby="add-project-heading">
+        <div>
+            <h2 id="add-project-heading">Hosting a service project?</h2>
+            <p>Add the details and volunteers can start finding it.</p>
+        </div>
+        <a class="btn btn-primary" href="/new-project">Add a new service project</a>
     </section>
 
 </main>
