@@ -107,5 +107,68 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
     }
 };
 
+/**
+ * Creates a new category in the database.
+ * @param {string} name - The name of the category (must be unique).
+ * @param {string} description - A description of the category.
+ * @returns {number} The id of the newly created category record.
+ */
+const createCategory = async (name, description) => {
+    const query = `
+        INSERT INTO public.project_categories (name, description)
+        VALUES ($1, $2)
+        RETURNING category_id;
+    `;
+
+    const queryParams = [name, description];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create category');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Created new category with ID:', result.rows[0].category_id);
+    }
+
+    return result.rows[0].category_id;
+};
+
+/**
+ * Updates an existing category in the database.
+ * @param {string|number} categoryId - The id of the category to update.
+ * @param {string} name - The name of the category (must be unique).
+ * @param {string} description - A description of the category.
+ * @returns {number} The id of the updated category record.
+ */
+const updateCategory = async (categoryId, name, description) => {
+    const query = `
+        UPDATE public.project_categories
+        SET name = $1, description = $2
+        WHERE category_id = $3
+        RETURNING category_id;
+    `;
+
+    const queryParams = [name, description, categoryId];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Category not found');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Updated category with ID:', categoryId);
+    }
+
+    return result.rows[0].category_id;
+};
+
 // Export the model functions
-export { getAllCategories, getCategoryDetails, getCategoriesByProjectId, updateCategoryAssignments };
+export {
+    getAllCategories,
+    getCategoryDetails,
+    getCategoriesByProjectId,
+    updateCategoryAssignments,
+    createCategory,
+    updateCategory
+};

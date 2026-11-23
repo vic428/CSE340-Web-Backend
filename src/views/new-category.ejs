@@ -1,0 +1,48 @@
+<%- include('partials/header') %>
+
+<main class="page">
+
+    <header class="page-header">
+        <p class="eyebrow">Ways to serve</p>
+        <h1><%= title %></h1>
+        <p class="lead">Add a category that service projects can be grouped under. All fields are required.</p>
+    </header>
+
+    <section class="home-section">
+
+        <form class="form" action="/new-category" method="POST">
+            <div class="form-group">
+                <label for="name">Category Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    maxlength="100"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                    aria-describedby="description-hint"
+                    maxlength="500"
+                    required
+                ></textarea>
+                <p class="form-hint" id="description-hint">A sentence about the kind of service this category covers.</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Create Category</button>
+                <a class="btn btn-secondary" href="/categories">Cancel</a>
+            </div>
+        </form>
+
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>

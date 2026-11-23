@@ -3,9 +3,35 @@ import {
     getAllCategories,
     getCategoryDetails,
     getCategoriesByProjectId,
-    updateCategoryAssignments
+    updateCategoryAssignments,
+    createCategory,
+    updateCategory
 } from '../models/categories.js';
 import { getAllProjects, getProjectsByCategoryId, getProjectDetails } from '../models/projects.js';
+import { body, validationResult } from 'express-validator';
+
+// The database reports this error code when a unique value (here, the
+// category name) is already in use
+const UNIQUE_VIOLATION = '23505';
+
+// Define validation and sanitization rules for the category forms.
+// .bail() stops at the first failed rule so each field reports one message.
+const categoryValidation = [
+    body('name')
+        .trim()
+        .notEmpty()
+        .withMessage('Category name is required')
+        .bail()
+        .isLength({ min: 3, max: 100 })
+        .withMessage('Category name must be between 3 and 100 characters'),
+    body('description')
+        .trim()
+        .notEmpty()
+        .withMessage('Category description is required')
+        .bail()
+        .isLength({ max: 500 })
+        .withMessage('Category description cannot exceed 500 characters')
+];
 
 // Define any controller functions
 const showCategoriesPage = async (req, res) => {
@@ -82,10 +108,106 @@ const processAssignCategoriesForm = async (req, res, next) => {
     res.redirect(`/project/${projectId}`);
 };
 
+const showNewCategoryForm = async (req, res) => {
+    const title = 'Add New Category';
+
+    res.render('new-category', { title });
+};
+
+const processNewCategoryForm = async (req, res) => {
+    // Check for validation errors
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        // Validation failed - loop through errors
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Redirect back to the new category form
+        return res.redirect('/new-category');
+    }
+
+    const { name, description } = req.body;
+
+    try {
+        const categoryId = await createCategory(name, description);
+
+        // Set a success flash message
+        req.flash('success', 'Category added successfully!');
+        res.redirect(`/category/${categoryId}`);
+    } catch (error) {
+        console.error('Error creating new category:', error);
+        req.flash('error', error.code === UNIQUE_VIOLATION
+            ? 'A category with that name already exists.'
+            : 'There was an error creating the category.');
+        res.redirect('/new-category');
+    }
+};
+
+const showEditCategoryForm = async (req, res, next) => {
+    const categoryId = req.params.id;
+    const category = await getCategoryDetails(categoryId);
+
+    // No category with this ID: hand a 404 to the global error handler
+    if (!category) {
+        const err = new Error('Category Not Found');
+        err.status = 404;
+        return next(err);
+    }
+
+    const title = 'Edit Category';
+    res.render('edit-category', { title, category });
+};
+
+const processEditCategoryForm = async (req, res, next) => {
+    const categoryId = req.params.id;
+
+    // No category with this ID: hand a 404 to the global error handler
+    const category = await getCategoryDetails(categoryId);
+    if (!category) {
+        const err = new Error('Category Not Found');
+        err.status = 404;
+        return next(err);
+    }
+
+    // Check for validation errors
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        // Validation failed - loop through errors
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Redirect back to the edit category form
+        return res.redirect('/edit-category/' + categoryId);
+    }
+
+    const { name, description } = req.body;
+
+    try {
+        await updateCategory(categoryId, name, description);
+
+        // Set a success flash message
+        req.flash('success', 'Category updated successfully!');
+        res.redirect(`/category/${categoryId}`);
+    } catch (error) {
+        console.error('Error updating category:', error);
+        req.flash('error', error.code === UNIQUE_VIOLATION
+            ? 'A category with that name already exists.'
+            : 'There was an error updating the category.');
+        res.redirect('/edit-category/' + categoryId);
+    }
+};
+
 // Export any controller functions
 export {
     showCategoriesPage,
     showCategoryDetailsPage,
     showAssignCategoriesForm,
-    processAssignCategoriesForm
+    processAssignCategoriesForm,
+    showNewCategoryForm,
+    processNewCategoryForm,
+    showEditCategoryForm,
+    processEditCategoryForm,
+    categoryValidation
 };

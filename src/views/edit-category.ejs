@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+<main class="page">
+
+    <header class="page-header">
+        <p class="eyebrow">Service category</p>
+        <h1><%= title %></h1>
+        <p class="lead">Update the details for <%= category.name %>. All fields are required.</p>
+    </header>
+
+    <section class="home-section">
+
+        <form class="form" action="/edit-category/<%= category.category_id %>" method="POST">
+            <div class="form-group">
+                <label for="name">Category Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="<%= category.name %>"
+                    maxlength="100"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                    aria-describedby="description-hint"
+                    maxlength="500"
+                    required
+                ><%= category.description %></textarea>
+                <p class="form-hint" id="description-hint">A sentence about the kind of service this category covers.</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Update Category</button>
+                <a class="btn btn-secondary" href="/category/<%= category.category_id %>">Cancel</a>
+            </div>
+        </form>
+
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>
