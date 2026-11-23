@@ -57,8 +57,16 @@ app.use((req, res, next) => {
     next(); // Pass control to the next middleware or route
 });
 
-// Middleware to make NODE_ENV available to all templates
+// Middleware to make the login state and NODE_ENV available to all templates
 app.use((req, res, next) => {
+    res.locals.isLoggedIn = false;
+    res.locals.user = null;
+    if (req.session && req.session.user) {
+        res.locals.isLoggedIn = true;
+        // The session user (name, email, role_name) lets templates check the role
+        res.locals.user = req.session.user;
+    }
+
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });

@@ -1,0 +1,39 @@
+<%- include('partials/header') %>
+
+<main class="page">
+
+    <header class="page-header">
+        <p class="eyebrow">Your account</p>
+        <h1>Dashboard</h1>
+        <p class="lead">Welcome, <%= name %>. You are logged in to the CSE 340 Service Network.</p>
+    </header>
+
+    <section class="home-section" aria-labelledby="account-heading">
+        <h2 id="account-heading">Account details</h2>
+        <dl class="detail-list">
+            <div>
+                <dt>Name</dt>
+                <dd><%= name %></dd>
+            </div>
+            <div>
+                <dt>Email</dt>
+                <dd><%= email %></dd>
+            </div>
+        </dl>
+        <a class="text-link" href="/logout">Log out</a>
+    </section>
+
+    <% if (user && user.role_name === 'admin') { %>
+        <!-- Shown to admin users only -->
+        <section class="action-strip" aria-labelledby="admin-heading">
+            <div>
+                <h2 id="admin-heading">Administration</h2>
+                <p>See everyone registered on the network and the role each account has.</p>
+            </div>
+            <a class="btn btn-primary" href="/users">View Registered Users</a>
+        </section>
+    <% } %>
+
+</main>
+
+<%- include('partials/footer') %>

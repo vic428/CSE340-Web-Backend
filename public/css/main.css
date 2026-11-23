@@ -171,6 +171,87 @@ nav a:focus-visible {
     border-radius: 0;
 }
 
+/* Account links (Register / Log In, or Dashboard / Logout) sit at the far
+   right of the bar, apart from the page links */
+nav ul {
+    align-items: center;
+}
+
+nav .nav-account {
+    margin-left: auto;
+}
+
+/* Log In stands out as a button so it is easy to find on every page */
+nav a.nav-cta {
+    margin: var(--space-xs) 0;
+    padding: 0.4rem 1.1rem;
+    background-color: #ffffff;
+    color: var(--color-primary);     /* 11.4:1 on white */
+    border: 2px solid #ffffff;
+    border-radius: var(--radius);
+}
+
+nav a.nav-cta:hover {
+    background-color: var(--color-accent-light);
+    border-color: var(--color-accent-light);
+    color: var(--color-primary-dark);
+}
+
+nav a.nav-cta:focus-visible {
+    outline-offset: 3px;
+    border-radius: var(--radius);
+}
+
+/* On narrow screens the links wrap, so the account links stay in the flow */
+@media (max-width: 40em) {
+    nav .nav-account {
+        margin-left: 0;
+    }
+}
+
+/* Home page: log in entry point directly under the hero */
+.account-entry {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-md);
+    background-color: var(--color-surface);
+    border-left: 6px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.account-entry h2 {
+    margin: 0 0 var(--space-xs);
+    font-size: 1.35rem;
+}
+
+.account-entry p {
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
+.account-entry-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+@media (min-width: 48em) {
+    .account-entry {
+        padding: var(--space-lg);
+    }
+}
+
+@media (max-width: 30em) {
+    .account-entry-actions,
+    .account-entry-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
 /* --------------------------------------------------------------------------
    Main content
    -------------------------------------------------------------------------- */
@@ -1112,6 +1193,62 @@ button.btn {
 .form-optional {
     font-weight: 400;
     color: var(--color-text-muted);
+}
+
+/* Data table (e.g. the registered users list) */
+.table-wrap {
+    margin-bottom: var(--space-md);
+    overflow-x: auto;                /* wide tables scroll instead of breaking the page */
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.table-wrap:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--color-surface);
+}
+
+.data-table th,
+.data-table td {
+    padding: var(--space-sm) var(--space-md);
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.data-table thead th {
+    background-color: var(--color-primary);
+    color: #ffffff;                  /* 11.4:1 on navy */
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.data-table tbody th {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: var(--color-bg);
+}
+
+.data-table tbody tr:last-child th,
+.data-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* Admin role stands out from the default green tag */
+.tag.tag-admin {
+    background-color: var(--color-primary);
+    color: #ffffff;                  /* 11.4:1 on navy */
 }
 
 /* Checkbox list (e.g. assigning categories to a project) */

@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+
+<main class="page">
+
+    <header class="page-header">
+        <p class="eyebrow">Administration</p>
+        <h1><%= title %></h1>
+        <p class="lead">Everyone with an account on the CSE 340 Service Network, and the role each account has.</p>
+    </header>
+
+    <section class="home-section" aria-labelledby="users-heading">
+        <h2 id="users-heading">All users (<%= users.length %>)</h2>
+
+        <% if (users.length > 0) { %>
+            <div class="table-wrap" role="region" aria-labelledby="users-heading" tabindex="0">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(registeredUser => { %>
+                            <tr>
+                                <th scope="row"><%= registeredUser.name %></th>
+                                <td><a href="mailto:<%= registeredUser.email %>"><%= registeredUser.email %></a></td>
+                                <td>
+                                    <span class="tag <%= registeredUser.role_name === 'admin' ? 'tag-admin' : '' %>"><%= registeredUser.role_name || 'none' %></span>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <p>No users have registered yet.</p>
+        <% } %>
+
+        <a class="text-link" href="/dashboard">Back to dashboard</a>
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>

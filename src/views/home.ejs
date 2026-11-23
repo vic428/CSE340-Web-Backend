@@ -16,6 +16,20 @@
         <img class="main-logo" src="/images/cse340-service-network.png" alt="CSE 340 Service Network logo">
     </section>
 
+    <% if (!isLoggedIn) { %>
+        <!-- Log in entry point, shown to visitors who are not logged in -->
+        <section class="account-entry" aria-labelledby="account-entry-heading">
+            <div class="account-entry-text">
+                <h2 id="account-entry-heading">Already part of the network?</h2>
+                <p>Log in to reach your dashboard, or create an account to get started.</p>
+            </div>
+            <div class="account-entry-actions">
+                <a class="btn btn-primary" href="/login">Log In</a>
+                <a class="btn btn-secondary" href="/register">Create an Account</a>
+            </div>
+        </section>
+    <% } %>
+
     <!-- Impact stats -->
     <section class="stats" aria-label="Our impact">
         <div class="stat">
@@ -123,6 +137,17 @@
         <p>Pick a project today and join a community of volunteers making a difference.</p>
         <a class="btn btn-light" href="/projects">Get Started</a>
     </section>
+
+    <% if (isLoggedIn) { %>
+        <!-- Shown to logged-in users only -->
+        <section class="action-strip" aria-labelledby="dashboard-heading">
+            <div>
+                <h2 id="dashboard-heading">Your account</h2>
+                <p>View your account details on your dashboard.</p>
+            </div>
+            <a class="btn btn-primary" href="/dashboard">My Dashboard</a>
+        </section>
+    <% } %>
 
 </main>
 

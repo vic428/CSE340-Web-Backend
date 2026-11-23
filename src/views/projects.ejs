@@ -92,14 +92,16 @@
         <a class="btn btn-light" href="/categories">Browse by Category</a>
     </section>
 
-    <!-- Add a new service project -->
-    <section class="action-strip" aria-labelledby="add-project-heading">
-        <div>
-            <h2 id="add-project-heading">Hosting a service project?</h2>
-            <p>Add the details and volunteers can start finding it.</p>
-        </div>
-        <a class="btn btn-primary" href="/new-project">Add a new service project</a>
-    </section>
+    <% if (user && user.role_name === 'admin') { %>
+        <!-- Add a new service project -->
+        <section class="action-strip" aria-labelledby="add-project-heading">
+            <div>
+                <h2 id="add-project-heading">Hosting a service project?</h2>
+                <p>Add the details and volunteers can start finding it.</p>
+            </div>
+            <a class="btn btn-primary" href="/new-project">Add a new service project</a>
+        </section>
+    <% } %>
 
 </main>
 

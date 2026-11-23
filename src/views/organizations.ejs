@@ -56,14 +56,16 @@
         <a class="btn btn-light" href="mailto:partners@cse340network.org">Become a Partner</a>
     </section>
 
-    <!-- Add a new organization -->
-    <section class="action-strip" aria-labelledby="add-organization-heading">
-        <div>
-            <h2 id="add-organization-heading">Know a partner we are missing?</h2>
-            <p>Add their details and they will appear in the partner list right away.</p>
-        </div>
-        <a class="btn btn-primary" href="/new-organization">Add a new organization</a>
-    </section>
+    <% if (user && user.role_name === 'admin') { %>
+        <!-- Add a new organization -->
+        <section class="action-strip" aria-labelledby="add-organization-heading">
+            <div>
+                <h2 id="add-organization-heading">Know a partner we are missing?</h2>
+                <p>Add their details and they will appear in the partner list right away.</p>
+            </div>
+            <a class="btn btn-primary" href="/new-organization">Add a new organization</a>
+        </section>
+    <% } %>
 
 </main>
 
